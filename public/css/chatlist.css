@@ -1,0 +1,64 @@
+/* ChatList */
+
+.webix_chatlist .webix_list_item {
+	border-color: #fff
+}
+
+.webix_chatlist .webix_list_item {
+	/*margin: 5px 0;*/
+	padding: 2px 5px;
+	cursor: auto;
+}
+
+.webix_chatlist .webix_list_item:first-child {
+	margin-top: 2px;
+}
+
+.webix_chatlist .webix_list_item:last-child {
+	margin-bottom: 2px;
+}
+
+.webix_chatlist_author {
+	color: #3498db;
+	font-size: 13px;
+	display: block;
+	line-height: 16px;
+	font-weight: 700
+}
+
+.webix_chatlist_left {
+	border-left: 2px solid #f19b60;
+	display: block;
+	background-color: #fbfbfb;
+	padding: 10px;
+	line-height: 21px;
+	font-size: 14px;
+	white-space: pre-wrap;
+	overflow: hidden;
+}
+
+.webix_chatlist_time {
+	display: inline-block;
+	font-weight: 400;
+	color: #666;
+	padding: 0 10px;
+}
+
+.webix_chatlist_right {
+	text-align: right;
+	border-left: none;
+	border-right: 2px solid #49cd81;
+	display: block;
+	background-color: #fbfbfb;
+	padding: 10px;
+	line-height: 21px;
+	font-size: 14px;
+	white-space: pre-wrap;
+	overflow: hidden;
+}
+
+.webix_chatlist img {
+	display: block;
+    max-width: 100%;
+    border: 1px solid #ddd;
+}

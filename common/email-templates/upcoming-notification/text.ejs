@@ -1,0 +1,7 @@
+<% if (message.student.gender === 'f') { %>Уважаемая<% } else { %>Уважаемый<% } %> <%- [message.student.firstname, message.student.lastname].join(' ') %>!
+
+Напоминаем, что вы записаны на сеанс прокторинга <%- moment(message.beginDate).format('DD.MM.YYYY') %> в <%- moment(message.beginDate).format('HH:mm') %> (GMT+3). Перед сеансом рекомендуется проверить связь через интерфейс системы https://exams.proctoredu.ru.
+
+--
+С уважением,
+Администрация ProctorEdu

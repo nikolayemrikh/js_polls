@@ -1,0 +1,94 @@
+/* Supervision */
+
+.webix_supervision {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+.webix_supervision_box {
+	position: absolute;
+	border: 1px solid #ddd;
+    background: center white url("/images/viewer.png") no-repeat;
+    background-size: contain;
+    overflow: hidden;
+}
+
+.webix_supervision_header,
+.webix_supervision_footer {
+	opacity: 0.8;
+	background-color: #3498db;
+	height: 46px;
+	overflow: hidden;
+	display: flex;
+	color: white;
+	font-size: 18px;
+	width: 100%;
+	z-index: 2;
+	line-height: 46px;
+}
+
+.webix_supervision_header {
+	position: relative;	
+}
+
+.webix_supervision_footer {
+	position: absolute;
+	bottom: 0;
+}
+
+.webix_supervision_selected .webix_supervision_header,
+.webix_supervision_selected .webix_supervision_footer {
+	background-color: #27ae60;
+}
+
+.webix_supervision_text {
+	width: 100%;
+	margin-left: 10px;
+}
+
+.webix_supervision_button {
+	padding: 0 15px;
+	opacity: 0.9;
+	cursor: pointer;
+}
+
+.webix_supervision_button:hover {
+	opacity: 1;
+	background-color: rgba(0,0,0,.1);
+}
+
+.webix_supervision_viewer {
+	position: absolute;
+	width: auto;
+	height: 100%;
+	max-width: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin-top: 0;
+	margin-left: auto;
+	margin-right: auto;
+	z-index: 0;
+}
+
+.webix_supervision_preview {
+	position: relative;
+	display: block;
+	max-width: 25%;
+	border-radius: 3px;
+	border: 1px solid rgba(128,128,128,0.5);
+	margin: 5px;
+	/*opacity: 0.8;*/
+	/*transition: opacity 0.5s ease-out 2s;*/
+	/*box-shadow: 0 0 10px;*/
+	cursor: pointer;
+	z-index: 1;
+}
+
+.webix_supervision_preview:hover {
+	opacity: 1;
+	transition: opacity 0s;
+}

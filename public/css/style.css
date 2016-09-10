@@ -1,0 +1,368 @@
+@import "webix.css";
+@import "sidebar.css";
+@import "supervision.css";
+@import "wizard.css";
+@import "chatlist.css";
+
+@font-face {
+	font-family: 'PT Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('PT Sans'), local('PTSans-Regular'), url(fonts/PTSansRegular.woff) format('woff')
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	font-style: normal;
+	font-weight: 700;
+	src: local('PT Sans Bold'), local('PTSans-Bold'), url(fonts/PTSansBold.woff) format('woff')
+}
+
+a {
+	text-decoration: none;
+	color: #3498db;
+	cursor: pointer;
+}
+
+a:active {
+	color: red;
+}
+
+.download .webix_template {
+	margin: 10px;
+	font-size: 18px;
+}
+
+.download .webix_template div {
+	margin-bottom: 3px;
+}
+
+.download .webix_template ul {
+	margin: 0;
+}
+
+.webix_img_btn {
+	text-align: center;
+}
+
+.webix_icon_btn {
+	padding: 0 5px;
+	line-height: 1.9em;
+}
+
+.title .webix_template {
+	font-size: 18px;
+}
+
+.webix_cell.success {
+	color: #27ae60;
+}
+
+.webix_cell.error {
+	color: #ce5545;
+}
+
+.webix_cell.warning {
+	color: #3498db;
+}
+
+.datetime {
+	background: none;
+	color: #fff;
+	white-space: nowrap;
+}
+
+.datetime .webix_template {
+	text-align: right;
+	background: none;
+	color: #fff;
+	white-space: nowrap;
+	font-size: 20px;
+}
+
+.datetime span {
+	padding: 0 5px;
+}
+
+.status {
+	padding: 2px 5px;
+	font-size: 12px;
+	border-radius: 3px;
+	color: #fff;
+	text-align: center;
+}
+
+.status1 {
+	background-color: blue;
+}
+
+.status2 {
+	background-color: teal;
+}
+
+.status3 {
+	background-color: orange;
+}
+
+.status4 {
+	background-color: red;
+}
+
+.status5 {
+	background-color: gray;
+}
+
+.status6 {
+	background-color: magenta;
+}
+
+.status7 {
+	background-color: green;
+}
+
+.status8 {
+	background-color: purple;
+}
+
+.webix_row_select a {
+	color: white;
+}
+.webix_row_select a:active {
+	color: red;
+}
+
+.webix_column .active {
+	color:green;
+}
+
+.webix_column .blocked {
+	color:purple;
+}
+
+.myhover {
+	background: #F0DCB6;
+}
+
+.countdown .webix_template {
+	line-height: 30px;
+}
+
+.countdown .webix_icon {
+	padding-left: 8px;
+}
+
+.sub_title .webix_template {
+	padding-left: 12px;
+	line-height: 38px;
+	white-space: nowrap;
+}
+
+.sub_title .webix_icon {
+	padding-right: 7px
+}
+
+.show_all.webix_layout_form {
+	background: #fbfbfb
+}
+
+.webix_list_item.disabled {
+	background: #eee;
+	color: #aaa;
+}
+
+.webix_unit_header {
+	padding: 10px;
+}
+
+.webix_unit_header_inner {
+	font-weight: bold;
+}
+
+.webix_overlay {
+	padding: 0;
+	height: 100%;
+	font-size: 18px;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	flex-direction: column;
+}
+
+.webix_list_item .date {
+	float: left;
+	width: 20%;
+	margin: 8px 0;
+	height: 28px;
+	overflow: hidden;
+}
+
+.webix_list_item .duration {
+	float: left;
+	width: 20%;
+	margin: 8px 0;
+	height: 28px;
+	overflow: hidden;
+}
+
+.webix_list_item .subject {
+	width: 40%;
+	float: left;
+	margin: 8px 0;
+	height: 28px;
+	overflow: hidden;
+}
+
+.webix_list_item .button {
+	width: 20%;
+	float: right;
+	margin: 4px 0;
+}
+
+.webix_list_item .button .status {
+	line-height: 40px;
+}
+
+.dialog item {
+	padding: 5px;
+	display: block;
+	border-bottom: 1px solid #eee;
+}
+
+.dialog left {
+	display: block;
+	float: left;
+	width: 150px;
+	font-weight: bold;
+}
+
+.dialog right {
+	display: block;
+	margin-left: 150px;
+}
+
+.timetable .header .webix_template {
+	text-align: center;
+	line-height: 30px;
+	font-weight: bold;
+}
+
+.timetable .webix_list_item {
+	text-align: center;
+}
+
+.timetable .footer .webix_template {
+	text-align: left;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 30px;
+	padding-left: 10px;
+	background: #fbfbfb;
+}
+
+.videobox {
+	text-align: center;
+}
+
+.videobox video {
+	width: auto;
+	height: 100%;
+	max-width: 100%;
+}
+
+.videobox .mirror {
+	transform: rotateY(180deg);
+}
+
+video[data-type='webcam'] {
+	background: center/contain white url("/images/webcam.png") no-repeat;
+}
+
+video[data-type='screen'] {
+	background: center/contain white url("/images/screen.png") no-repeat;
+}
+
+video[data-type='mobile'] {
+	background: center/contain white url("/images/mobile.png") no-repeat;
+}
+
+video[data-type='viewer'] {
+	background: center/contain white url("/images/viewer.png") no-repeat;
+}
+
+video[data-type='audio'] {
+	background: center/contain white url("/images/audio.png") no-repeat;
+}
+
+video[data-spinner] {
+	/* http://preloaders.net/ru/circular */
+	background: center/25% white url("/images/spinner.gif") no-repeat;
+}
+
+/*video::-webkit-media-controls {*/
+/*	display: none !important;*/
+/*}*/
+
+.schedule .webix_hcell {
+	text-align: center;
+}
+
+.schedule .webix_first .webix_cell {
+	background: white !important;
+	color: #666 !important;
+	/*font-weight: bold;*/
+}
+
+.schedule .selected.webix_cell {
+	background: #3498db;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+}
+
+.schedule .selected.webix_cell_select {
+	background: #a4b4bf !important;
+}
+
+.planner_calendar .webix_layout_space {
+	background-color: white;
+}
+
+.stats.webix_chart {
+	border-left: 1px solid white;
+}
+
+.mobile_list .webix_list_item {
+	line-height: 45px;
+	font-size: 16px;
+}
+
+.login_from .webix_section {
+	text-align: center;
+	padding-left: 0;
+}
+
+.login_from .webix_template {
+	text-align: center;
+}
+
+.login_provider {
+	opacity: 0.8;
+	padding: 2px;
+}
+
+.login_provider img {
+	border: 1px solid #eee;
+	border-radius: 3px;
+}
+
+.login_provider:hover {
+	opacity: 1;
+}
+
+.templates_list .webix_list_item {
+	padding-right: 5px;
+}
+
+.templates_list .webix_list_item:hover {
+	background-color: #fbfbfb;
+}

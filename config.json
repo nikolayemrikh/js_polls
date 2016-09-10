@@ -1,0 +1,15 @@
+{
+    "cookie": {
+        "secret": "its-a-secret",
+        "ttl": 14
+    },
+    "mongodb": {
+        "uri": "mongodb://admin:admin@ds147995.mlab.com:47995/js_polls"
+    },
+    "auth": {
+        "plain": {
+            "strategy": "local",
+            "lms": "generic"
+        }
+    }
+}

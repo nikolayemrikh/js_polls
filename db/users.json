@@ -1,0 +1,36 @@
+[{
+    "username": "student",
+    "password": "student",
+    "lastname": "Иванов",
+    "firstname": "Александр",
+    "middlename": "Иванович",
+    "gender": "m",
+    "birthday": "22.07.1992",
+    "email": "student@example.com",
+    "role": 1,
+    "citizenship": "RU",
+    "documentType": "P",
+    "documentNumber": "1234 123456",
+    "documentIssueDate": "01.02.2004",
+    "provider": "plain",
+    "attach": []
+}, {
+    "username": "proctor",
+    "password": "proctor",
+    "lastname": "Петров",
+    "firstname": "Петр",
+    "middlename": "Петрович",
+    "gender": "m",
+    "email": "proctor@example.com",
+    "role": 2,
+    "provider": "plain",
+    "attach": []
+}, {
+    "username": "admin",
+    "password": "admin",
+    "lastname": "Админинстратор",
+    "email": "admin@example.com",
+    "role": 3,
+    "provider": "plain",
+    "attach": []
+}]
