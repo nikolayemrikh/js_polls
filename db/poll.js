@@ -37,5 +37,24 @@ module.exports = {
     },
     delete: function(args, callback) {
         Poll.findByIdAndRemove(args.id, null, callback);
+    },
+    assignUser: function(args, callback) {
+        Poll.findById(args.id, function(err, poll) {
+            if (err || !poll) return callback(err);
+            if (poll.answers) {
+                poll.answers = poll.answers.map(function(elem) {
+                    if (elem.text == args.data.text && elem.assignedUsers.indexOf(args.data.userToAssign) == -1) {
+                        elem.assignedUsers.push(args.data.userToAssign)
+                    }
+                    return elem;
+                });
+                console.log(poll)
+                poll.save(callback);
+            }
+            else {
+                var err = new Error("No asnwers array")
+                callback(err);
+            }
+        });
     }
 }

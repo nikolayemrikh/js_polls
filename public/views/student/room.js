@@ -1,10 +1,10 @@
 /* global webix, $$ */
-define("views/admin/room", [
+define("views/student/room", [
     "models/user",
     "models/time",
 ], function(user, time) {
     "use strict";
-    var uid = webix.uids('ADD_WINDOW', 'ADD_POLL_FORM', 'TABLE', 'POLL_POPUP', 'ANSWER_POLL_FORM', 'ANSWER_POLL_BTN_SEND');
+    var uid = webix.uids('ADD_WINDOW', 'ADD_POLL_FORM', 'TABLE', 'POLL_POPUP', 'ANSWER_POLL_FORM');
 
     var answersCounter = 1;
     var answerInputName = "answer";
@@ -27,16 +27,12 @@ define("views/admin/room", [
 
     function pushAnswersInArray(values) {
         var answers = [];
-        var tempArr = [];
         for (var elem in values) {
-            if (elem.slice(0, answerInputName.length) != answerInputName) continue;
-            if (tempArr.indexOf(values[elem]) == -1) {
+            if (elem.slice(0, answerInputName.length) == answerInputName) {
                 answers.push({
                     text: values[elem]
                 });
-                console.log(answers)
             }
-            tempArr.push(values[elem]);
         }
         return answers;
     }
@@ -194,15 +190,11 @@ define("views/admin/room", [
                 view: "form",
                 id: uid.ANSWER_POLL_FORM,
                 elements: [{
-                    id: uid.ANSWER_POLL_BTN_SEND,
                     view: "button",
                     value: "Проголосовать",
-                    hidden: true,
                     click: function() {
                         var poll = this.getParentView().config.poll;
                         var answerText = $$("radioView").getValue();
-                        if (!answerText) return;
-                        
                         var answer = {
                             text: answerText,
                             userToAssign: user.get("id")
@@ -213,14 +205,6 @@ define("views/admin/room", [
                             webix.message("Проголосовано");
                             $$(uid.TABLE).clearAll();
                             $$(uid.TABLE).load("/api/poll");
-                            $$("radioView").disable();
-                            $$("radioView").config.options.map(function(option) {
-                                option.value = answer.text + " - число проголосовавших: " + answer.assignedUsers.length;
-                                return option;
-                            });
-                            $$("radioView").config.label = "Результаты";
-                            $$("radioView").refresh();
-                            $$(uid.ANSWER_POLL_BTN_SEND).hide();
                         });
                     }
                 }],
@@ -239,43 +223,24 @@ define("views/admin/room", [
                 // $$("pollTemplate").setValues(poll);
                 var radioView = {
                     id: "radioView",
-                    name: "radioControl",
                     view: "radio",
                     label: "Варианты ответа",
                     labelWidth: 200,
                     vertical: true,
                     options: []
                 };
-                var alreadyAssigned = false;
-                var userAnswer;
                 for (var i = 0; i < poll.answers.length; i++) {
                     var answer = poll.answers[i];
-                    var option = {
+                    console.log(answer)
+                    radioView.options.push({
                         id: answer.text,
                         value: answer.text
-                    };
-                    if (answer.assignedUsers.indexOf(user.get("id")) != -1) {
-                        alreadyAssigned = true;
-                        userAnswer = poll.answers[i].text;
-                        //Добавим к значению количество ответивших пользователей
-                        option.value = answer.text + " - число проголосовавших: " + answer.assignedUsers.length;
-                    }
-                    radioView.options.push(option);
-                }
-                if (!alreadyAssigned) {
-                    $$(uid.ANSWER_POLL_BTN_SEND).show();
-                } else {
-                    radioView.label = "Результаты";
-                    radioView.disabled = true;
-                    //Выберем значение, которое выбрал пользователь
-                    radioView.value = userAnswer;
+                    });
                 }
                 $$(uid.ANSWER_POLL_FORM).addView(radioView, 1);
                 this.show();
             },
             onHide: function() {
-                $$(uid.ANSWER_POLL_BTN_SEND).hide();
-                $$("radioView").config.label = "Варианты ответа";
                 $$(uid.ANSWER_POLL_FORM).removeView("radioView");
             }
         }
@@ -331,7 +296,7 @@ define("views/admin/room", [
                     click: function() {
                         var $table = $$(uid.TABLE);
                         var selected = $table.getSelectedItem();
-                        if (selected) removeRow(selected, $table);
+                        removeRow(selected, $table);
                     }
                 }]
             }, {
@@ -406,7 +371,6 @@ define("views/admin/room", [
                     },
                     pollDescriptionLink: function(e, id) {
                         // TODO
-                        var poll = this.getItem(id);
                     }
                 }
             }]
@@ -419,34 +383,6 @@ define("views/admin/room", [
             '<p>' + obj.description + '</p>' +
             '</div>';
     }*/
-    
-    var votedUsersPopup = {
-        id: uid.POLL_POPUP,
-        view: "window",
-        move: true,
-        modal: true,
-        width: 640,
-        hidden: true,
-        maxHeight: window.innerHeight,
-        position: "center",
-        head: {
-            view: "toolbar",
-            cols: [{
-                view: "label",
-                label: "Проголосовавшие пользователи"
-            }, {
-                view: "icon",
-                icon: "times-circle",
-                width: 40,
-                click: function() {
-                    this.getTopParentView().hide();
-                }
-            }]
-        },
-        body: {
-            
-        }
-    }
 
     return {
         $ui: ui,

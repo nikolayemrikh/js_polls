@@ -16,18 +16,18 @@ router.get('/', function(req, res) {
 });
 // Get poll by id
 router.get('/:id', function(req, res) {
-   var args = {
-       id: req.params.id
-   };
-   poll.get(args, function(err, data) {
-       console.log(err)
-       if (!err && data) {
+    var args = {
+        id: req.params.id
+    };
+    poll.get(args, function(err, data) {
+        console.log(err)
+        if (!err && data) {
             res.json(data);
         }
         else {
             res.status(400).end();
         }
-   });
+    });
 });
 // Create new poll
 router.post('/', function(req, res) {
@@ -49,20 +49,34 @@ router.post('/', function(req, res) {
 router.put('/:id', function(req, res) {
     var args = {
         id: req.params.id,
+        isAssignUser: req.query.isAssignUser,
         data: req.body
     };
-    poll.update(args, function(err, data) {
-        if (!err && data) {
-            /*req.login(data, function(error) {
-                if (error) res.status(400).end();
-                else res.json(data);
-            });*/
-            res.json(data);
-        }
-        else {
-            res.status(400).end();
-        }
-    });
+    if (args.isAssignUser) {
+        poll.assignUser(args, function(err, data) {
+            if (!err && data) {
+                res.json(data);
+            }
+            else {
+                console.log(err)
+                res.status(400).end();
+            }
+        });
+    }
+    else
+        poll.update(args, function(err, data) {
+            if (!err && data) {
+                /*req.login(data, function(error) {
+                    if (error) res.status(400).end();
+                    else res.json(data);
+                });*/
+                res.json(data);
+            }
+            else {
+                console.log(err)
+                res.status(400).end();
+            }
+        });
 });
 
 router.delete('/:id', function(req, res) {
