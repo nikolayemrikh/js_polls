@@ -4,10 +4,11 @@ var Poll = require('./models/poll');
 //var Answer = require('./models/answer');
 module.exports = {
     add: function(args, callback) {
+        console.log(args.data)
         var poll = new Poll({
             name: args.data.name,
             description: args.data.description,
-            date: args.data.date || new Date(),
+            date: args.data.date || new Date().toJSON(),
             creator: args.data.creator,
             answers: args.data.answers
         });

@@ -62,10 +62,11 @@ define("views/admin/room", [
                     var args = {
                         name: values.name,
                         description: values.description,
-                        date: new Date(),
+                        date: new Date().toJSON(),
                         answers: pushAnswersInArray(values),
                         creator: user.get("id")
                     };
+                    console.log(args)
                     webix.ajax().headers({
                         "Content-type": "application/json"
                     }).post("/api/poll", args).then(function(data) {
@@ -117,7 +118,8 @@ define("views/admin/room", [
                         view: "text",
                         label: "Вариант ответа",
                         placeholder: "Вариант ответа",
-                        name: answerInputName + answersCounter
+                        name: answerInputName + answersCounter,
+                        labelWidth: 200
                     }, elements.length - 1);
                 }
             }],
@@ -126,6 +128,56 @@ define("views/admin/room", [
             }
         }
     };
+
+    var pollPopup = {
+        id: uid.POLL_POPUP,
+        view: "window",
+        move: true,
+        modal: true,
+        width: 640,
+        hidden: true,
+        maxHeight: window.innerHeight,
+        position: "center",
+        head: {
+            view: "toolbar",
+            cols: [{
+                view: "label",
+                label: "Опрос"
+            }, {
+                view: "icon",
+                icon: "times-circle",
+                width: 40,
+                click: function() {
+                    this.getTopParentView().hide();
+                }
+            }]
+        },
+        body: {
+
+        }
+    };
+
+    function removeRow(row, $table) {
+        console.log(row)
+        webix.confirm({
+            ok: "Удалить",
+            cancel: "Отменить",
+            text: "Подтвердите удаление",
+            type: "confirm-error",
+            callback: function(result) {
+                if (result) {
+                    webix.ajax().del('/api/poll/' + row._id).
+                    then(function(data) {
+                        $$(uid.TABLE).clearAll();
+                        $$(uid.TABLE).load("/api/poll");
+                        webix.message("Опрос удален");
+                    }).fail(function(err) {
+                        webix.message("Ошибка удаления опроса");
+                    });
+                }
+            }
+        });
+    }
 
     var ui = {
         type: "space",
@@ -148,12 +200,22 @@ define("views/admin/room", [
                     click: function() {
                         $$(uid.ADD_WINDOW).show();
                     }
+                }, {
+                    view: "button",
+                    value: "Удалить опрос",
+                    autowidth: true,
+                    click: function() {
+                        var $table = $$(uid.TABLE);
+                        var selected = $table.getSelectedItem();
+                        removeRow(selected, $table);
+                    }
                 }]
             }, {
                 id: uid.TABLE,
                 view: "datatable",
                 resizeColumn: true,
                 scroll: "y",
+                select: true,
                 columns: [{
                     id: "name",
                     header: "Название опроса",

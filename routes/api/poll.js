@@ -36,13 +36,11 @@ router.post('/', function(req, res) {
     };
     poll.add(args, function(err, data) {
         if (!err && data) {
-            console.log(err, data)
-            //res.status(200).end();
+            //console.log(err, data)
             res.json(data);
         }
         else {
-            console.log(err, data)
-            //res.status(400).end();
+            //console.log(err, data)
             res.status(400).end();
         }
     });
@@ -73,9 +71,11 @@ router.delete('/:id', function(req, res) {
     };
     poll.delete(args, function(err, data) {
         if (!err && data) {
+            console.log("test", err, data)
             res.status(200).end();
         }
         else {
+            console.log("test1", err, data)
             res.status(400).end();
         }
     });
