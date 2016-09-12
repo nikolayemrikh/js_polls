@@ -10,7 +10,8 @@ module.exports = function(app) {
     app.use('/auth', auth);
     app.use('/rest', rest);
     app.use('/lms', lms);
-    app.use('/api', auth.isAuth, api);
+    //app.use('/api', auth.isAuth, api);
+    app.use('/api', api);
     app.use('/tools', auth.isAuth, tools);
     app.use('/storage', auth.isAuth, storage);
     app.use('/stream', auth.isProctor, stream);

@@ -20,7 +20,8 @@ define("plugins/user", [
 					app.show("main/admin.room");
 					break;
 				default:
-					app.show("login");
+					app.show("main/student.room");
+					//app.show("login");
 			}
 		});
 	}
@@ -32,14 +33,14 @@ define("plugins/user", [
 				case 'download':
 					return true;
 				default:
-					if (!user.isAuth()) {
+					/*if (!user.isAuth()) {
 						user.fetch().then(function() {
 							router(window.location.hash.slice(1));
 						}).fail(function() {
 							router("login");
 						});
 						return false;
-					}
+					}*/
 					if (url === 'home') {
 						router();
 						return false;

@@ -4,7 +4,8 @@ define("views/admin/room", [
     "models/time",
 ], function(user, time) {
     "use strict";
-    var uid = webix.uids('ADD_WINDOW', 'ADD_POLL_FORM', 'TABLE', 'POLL_POPUP', 'ANSWER_POLL_FORM', 'ANSWER_POLL_BTN_SEND');
+    var uid = webix.uids('ADD_WINDOW', 'ADD_POLL_FORM', 'TABLE', 'POLL_POPUP', 'ANSWER_POLL_FORM',
+        'ANSWER_POLL_BTN_SEND', 'VOTED_POPUP', 'VOTED_LIST', 'SHOW_USERS_POPUP', 'SHOW_USERS_LIST');
 
     var answersCounter = 1;
     var answerInputName = "answer";
@@ -202,7 +203,7 @@ define("views/admin/room", [
                         var poll = this.getParentView().config.poll;
                         var answerText = $$("radioView").getValue();
                         if (!answerText) return;
-                        
+
                         var answer = {
                             text: answerText,
                             userToAssign: user.get("id")
@@ -213,12 +214,14 @@ define("views/admin/room", [
                             webix.message("Проголосовано");
                             $$(uid.TABLE).clearAll();
                             $$(uid.TABLE).load("/api/poll");
-                            $$("radioView").disable();
-                            $$("radioView").config.options.map(function(option) {
-                                option.value = answer.text + " - число проголосовавших: " + answer.assignedUsers.length;
-                                return option;
-                            });
+                            // TODO - обновить число голосовавших после нажатия кнопки
+                            /*var options = $$("radioView").config.options;
+                            for (var i = 0; i < options.length; i++) {
+                                options[i].value = answer.text + " - число проголосовавших: " + answer.assignedUsers.length;
+                            }
+                            console.log(options, $$("radioView").config.options)*/
                             $$("radioView").config.label = "Результаты";
+                            $$("radioView").disable();
                             $$("radioView").refresh();
                             $$(uid.ANSWER_POLL_BTN_SEND).hide();
                         });
@@ -264,7 +267,8 @@ define("views/admin/room", [
                 }
                 if (!alreadyAssigned) {
                     $$(uid.ANSWER_POLL_BTN_SEND).show();
-                } else {
+                }
+                else {
                     radioView.label = "Результаты";
                     radioView.disabled = true;
                     //Выберем значение, которое выбрал пользователь
@@ -378,7 +382,7 @@ define("views/admin/room", [
                             return "<span class='pollTimeLink'>" + timeStr + "</span>";
                         }
                     }, {
-                        id: "answersNumbers",
+                        id: "tableAnswersNumbers",
                         header: "Количество вопросов",
                         fillspace: 3,
                         template: function(row) {
@@ -395,7 +399,7 @@ define("views/admin/room", [
                                 console.log(answer.assignedUsers.length)
                                 numberPeopleVoted += answer.assignedUsers.length;
                             }
-                            return "<a class='pollDescriptionLink'>" + numberPeopleVoted + "</a>";
+                            return "<a class='pollNumberVoted'>" + numberPeopleVoted + "</a>";
                         }
                     }
                 ],
@@ -404,9 +408,11 @@ define("views/admin/room", [
                         var poll = this.getItem(id);
                         $$(uid.POLL_POPUP).callEvent('doShow', [poll]);
                     },
-                    pollDescriptionLink: function(e, id) {
+                    pollNumberVoted: function(e, id) {
                         // TODO
+                        console.log("kek")
                         var poll = this.getItem(id);
+                        $$(uid.VOTED_POPUP).callEvent('doShow', [poll]);
                     }
                 }
             }]
@@ -419,9 +425,20 @@ define("views/admin/room", [
             '<p>' + obj.description + '</p>' +
             '</div>';
     }*/
-    
+    var showUsersPopup = {
+        id: uid.SHOW_USERS_POPUP,
+        body: {
+            id: uid.SHOW_USERS_LIST,
+            view: "list",
+            autoheight: true,
+            template: function(obj) {
+                return obj.firstname + " " + obj.lastname
+            }
+        }
+    }
+
     var votedUsersPopup = {
-        id: uid.POLL_POPUP,
+        id: uid.VOTED_POPUP,
         view: "window",
         move: true,
         modal: true,
@@ -444,13 +461,46 @@ define("views/admin/room", [
             }]
         },
         body: {
-            
+            view: "activeList",
+            id: uid.VOTED_LIST,
+            autoheight: true,
+            activeContent: {
+                showUsersBtn: {
+                    view: "button",
+                    id: "showUsersBtnId",
+                    label: "Показать пользователей",
+                    type: "icon",
+                    icon: "list",
+                    width: 40,
+                    popup: String(uid.SHOW_USERS_POPUP),
+                    click: function(id, e) {
+                        var itemId = $$(uid.VOTED_LIST).locate(e);
+                        var item = $$(uid.VOTED_LIST).getItem(itemId);
+                        console.log(item)
+                        $$(uid.SHOW_USERS_POPUP).show();
+                        $$(uid.SHOW_USERS_LIST).parse(item.assignedUsers);
+                    }
+                }
+            },
+            template: function(obj, common) {
+                return '<div style="display: flex; align-items: center; justify-content: space-around;"><div>Варианто ответа: ' + obj.text + '</div><div> Число проголосовавших: ' + obj.assignedUsers.length + '</div><div>' + common.showUsersBtn(obj, common) + '</div></div>';
+            },
+            type: {
+                height: 46
+            }
+        },
+        on: {
+            doShow: function(poll) {
+                console.log("test")
+                $$(uid.VOTED_LIST).parse(poll.answers);
+                this.show();
+            }
         }
     }
 
     return {
         $ui: ui,
-        $windows: [addPopup, pollPopup],
+        $windows: [addPopup, pollPopup, votedUsersPopup, showUsersPopup],
         $oninit: function(view) {
             $$(uid.TABLE).clearAll();
             $$(uid.TABLE).load("/api/poll");

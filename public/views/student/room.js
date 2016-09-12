@@ -4,7 +4,8 @@ define("views/student/room", [
     "models/time",
 ], function(user, time) {
     "use strict";
-    var uid = webix.uids('ADD_WINDOW', 'ADD_POLL_FORM', 'TABLE', 'POLL_POPUP', 'ANSWER_POLL_FORM');
+    var uid = webix.uids('ADD_WINDOW', 'ADD_POLL_FORM', 'TABLE', 'POLL_POPUP', 'ANSWER_POLL_FORM', 
+    'ANSWER_POLL_BTN_SEND', 'VOTED_POPUP', 'VOTED_LIST');
 
     var answersCounter = 1;
     var answerInputName = "answer";
@@ -27,12 +28,16 @@ define("views/student/room", [
 
     function pushAnswersInArray(values) {
         var answers = [];
+        var tempArr = [];
         for (var elem in values) {
-            if (elem.slice(0, answerInputName.length) == answerInputName) {
+            if (elem.slice(0, answerInputName.length) != answerInputName) continue;
+            if (tempArr.indexOf(values[elem]) == -1) {
                 answers.push({
                     text: values[elem]
                 });
+                console.log(answers)
             }
+            tempArr.push(values[elem]);
         }
         return answers;
     }
@@ -64,7 +69,8 @@ define("views/student/room", [
                         description: values.description,
                         date: new Date().toJSON(),
                         answers: pushAnswersInArray(values),
-                        creator: user.get("id")
+                        //creator: user.get("id")
+                        creator: "57d65eb3dcba0f36523d1288"
                     };
                     console.log(args)
                     webix.ajax().headers({
@@ -190,14 +196,19 @@ define("views/student/room", [
                 view: "form",
                 id: uid.ANSWER_POLL_FORM,
                 elements: [{
+                    id: uid.ANSWER_POLL_BTN_SEND,
                     view: "button",
                     value: "Проголосовать",
+                    hidden: true,
                     click: function() {
                         var poll = this.getParentView().config.poll;
                         var answerText = $$("radioView").getValue();
+                        if (!answerText) return;
+                        
                         var answer = {
                             text: answerText,
-                            userToAssign: user.get("id")
+                            //userToAssign: user.get("id")
+                            userToAssign: "57d65eb3dcba0f36523d1288"
                         };
                         webix.ajax().headers({
                             "Content-type": "application/json"
@@ -205,6 +216,16 @@ define("views/student/room", [
                             webix.message("Проголосовано");
                             $$(uid.TABLE).clearAll();
                             $$(uid.TABLE).load("/api/poll");
+                            // TODO - обновить число голосовавших после нажатия кнопки
+                            /*var options = $$("radioView").config.options;
+                            for (var i = 0; i < options.length; i++) {
+                                options[i].value = answer.text + " - число проголосовавших: " + answer.assignedUsers.length;
+                            }
+                            console.log(options, $$("radioView").config.options)*/
+                            $$("radioView").config.label = "Результаты";
+                            $$("radioView").disable();
+                            $$("radioView").refresh();
+                            $$(uid.ANSWER_POLL_BTN_SEND).hide();
                         });
                     }
                 }],
@@ -223,24 +244,44 @@ define("views/student/room", [
                 // $$("pollTemplate").setValues(poll);
                 var radioView = {
                     id: "radioView",
+                    name: "radioControl",
                     view: "radio",
                     label: "Варианты ответа",
                     labelWidth: 200,
                     vertical: true,
                     options: []
                 };
+                var alreadyAssigned = false;
+                var userAnswer;
                 for (var i = 0; i < poll.answers.length; i++) {
                     var answer = poll.answers[i];
-                    console.log(answer)
-                    radioView.options.push({
+                    var option = {
                         id: answer.text,
                         value: answer.text
-                    });
+                    };
+                    if (answer.assignedUsers.indexOf("57d65eb3dcba0f36523d1288") != -1) {
+                    //if (answer.assignedUsers.indexOf(user.get("id")) != -1) {
+                        alreadyAssigned = true;
+                        userAnswer = poll.answers[i].text;
+                        //Добавим к значению количество ответивших пользователей
+                        option.value = answer.text + " - число проголосовавших: " + answer.assignedUsers.length;
+                    }
+                    radioView.options.push(option);
+                }
+                if (!alreadyAssigned) {
+                    $$(uid.ANSWER_POLL_BTN_SEND).show();
+                } else {
+                    radioView.label = "Результаты";
+                    radioView.disabled = true;
+                    //Выберем значение, которое выбрал пользователь
+                    radioView.value = userAnswer;
                 }
                 $$(uid.ANSWER_POLL_FORM).addView(radioView, 1);
                 this.show();
             },
             onHide: function() {
+                $$(uid.ANSWER_POLL_BTN_SEND).hide();
+                $$("radioView").config.label = "Варианты ответа";
                 $$(uid.ANSWER_POLL_FORM).removeView("radioView");
             }
         }
@@ -282,7 +323,7 @@ define("views/student/room", [
                     css: "title",
                     template: "Все опросы",
                     borderless: true
-                }, {
+                }/*, {
                     view: "button",
                     value: "Добавить опрос",
                     autowidth: true,
@@ -296,9 +337,9 @@ define("views/student/room", [
                     click: function() {
                         var $table = $$(uid.TABLE);
                         var selected = $table.getSelectedItem();
-                        removeRow(selected, $table);
+                        if (selected) removeRow(selected, $table);
                     }
-                }]
+                }*/]
             }, {
                 id: uid.TABLE,
                 view: "datatable",
@@ -343,7 +384,7 @@ define("views/student/room", [
                             return "<span class='pollTimeLink'>" + timeStr + "</span>";
                         }
                     }, {
-                        id: "answersNumbers",
+                        id: "tableAnswersNumbers",
                         header: "Количество вопросов",
                         fillspace: 3,
                         template: function(row) {
@@ -360,7 +401,7 @@ define("views/student/room", [
                                 console.log(answer.assignedUsers.length)
                                 numberPeopleVoted += answer.assignedUsers.length;
                             }
-                            return "<a class='pollDescriptionLink'>" + numberPeopleVoted + "</a>";
+                            return "<a class='pollNumberVoted'>" + numberPeopleVoted + "</a>";
                         }
                     }
                 ],
@@ -369,8 +410,10 @@ define("views/student/room", [
                         var poll = this.getItem(id);
                         $$(uid.POLL_POPUP).callEvent('doShow', [poll]);
                     },
-                    pollDescriptionLink: function(e, id) {
+                    pollNumberVoted: function(e, id) {
                         // TODO
+                        var poll = this.getItem(id);
+                        $$(uid.VOTED_POPUP).callEvent('doShow', [poll]);
                     }
                 }
             }]
@@ -383,10 +426,47 @@ define("views/student/room", [
             '<p>' + obj.description + '</p>' +
             '</div>';
     }*/
+    
+    var votedUsersPopup = {
+        id: uid.VOTED_POPUP,
+        view: "window",
+        move: true,
+        modal: true,
+        width: 640,
+        hidden: true,
+        maxHeight: window.innerHeight,
+        position: "center",
+        head: {
+            view: "toolbar",
+            cols: [{
+                view: "label",
+                label: "Проголосовавшие пользователи"
+            }, {
+                view: "icon",
+                icon: "times-circle",
+                width: 40,
+                click: function() {
+                    this.getTopParentView().hide();
+                }
+            }]
+        },
+        body: {
+            view: "activeList",
+            id: uid.VOTED_LIST,
+            template: '<div style="display: flex;"><div>#text#</div><div>#votedUsers.length#</div></div>'
+        },
+        on: {
+            doShow: function(poll) {
+                console.log("test")
+                $$(uid.VOTED_LIST).parse(poll.answers);
+                this.show();
+            }
+        }
+    }
 
     return {
         $ui: ui,
-        $windows: [addPopup, pollPopup],
+        $windows: [addPopup, pollPopup, votedUsersPopup],
         $oninit: function(view) {
             $$(uid.TABLE).clearAll();
             $$(uid.TABLE).load("/api/poll");

@@ -18,6 +18,7 @@ module.exports = {
         });
     },
     list: function(args, callback) {
+        //Poll.find({}).populate('creator', 'username firstname lastname').populate({path: 'answers.assignedUsers', select: 'username firstname lastname'}).exec(callback);
         Poll.find({}).populate('creator', 'username firstname lastname').exec(callback);
     },
     get: function(args, callback) {
@@ -43,9 +44,9 @@ module.exports = {
             if (err || !poll) return callback(err);
             if (poll.answers) {
                 poll.answers = poll.answers.map(function(elem) {
-                    if (elem.text == args.data.text && elem.assignedUsers.indexOf(args.data.userToAssign) == -1) {
-                        elem.assignedUsers.push(args.data.userToAssign)
-                    }
+                    //if (elem.text == args.data.text && elem.assignedUsers.indexOf(args.data.userToAssign) == -1) {
+                        elem.assignedUsers.push(args.data.userToAssign);
+                    //}
                     return elem;
                 });
                 console.log(poll)
